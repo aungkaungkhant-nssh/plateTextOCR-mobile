@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
+import { postMultipart } from '@/utils/apiClient';
 
 export const useCamera = () => {
     const [uploading, setUploading] = useState(false);
@@ -14,6 +15,8 @@ export const useCamera = () => {
         })();
     }, []);
 
+
+
     const openCamera = async () => {
         const cameraPerm = await ImagePicker.requestCameraPermissionsAsync();
         if (cameraPerm.status !== 'granted') {
@@ -24,13 +27,14 @@ export const useCamera = () => {
         const result = await ImagePicker.launchCameraAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
-            quality: 1,
+            quality: 0.5,
             base64: false,
         });
 
 
         if (!result.canceled && result.assets[0]) {
             const asset = result.assets[0];
+
 
             // Extract filename and type properly
             const fileName = asset.uri.split('/').pop() || 'photo.jpg';
@@ -45,14 +49,9 @@ export const useCamera = () => {
 
             try {
                 setUploading(true);
-                const response = await axios.post('http://192.168.1.6:8000/vehicles', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
-                });
-                // {"id": 40, "plate_number": "3 For FAME 4 Urocrush Stones Renal Capbules ) 00"}
+                const result = await postMultipart("/vehicles", formData);
+                // // {"id": 40, "plate_number": "3 For FAME 4 Urocrush Stones Renal Capbules ) 00"}
 
-                return response.data;
             } catch (err) {
                 // Improved error logging
                 if (axios.isAxiosError(err)) {
