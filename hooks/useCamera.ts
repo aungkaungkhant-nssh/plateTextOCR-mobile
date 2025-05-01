@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 import { postMultipart } from '@/utils/apiClient';
+import { Vehicle } from '@/types/vehicle';
 
 export const useCamera = () => {
     const [uploading, setUploading] = useState(false);
     const [hasPermission, setHasPermission] = useState<boolean | null>(null);
-
+    const [vehicle, setVehicle] = useState<Vehicle | null>(null);
     useEffect(() => {
         (async () => {
             const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -50,6 +51,7 @@ export const useCamera = () => {
             try {
                 setUploading(true);
                 const result = await postMultipart("/vehicles", formData);
+                setVehicle(result);
                 // // {"id": 40, "plate_number": "3 For FAME 4 Urocrush Stones Renal Capbules ) 00"}
 
             } catch (err) {
@@ -59,10 +61,12 @@ export const useCamera = () => {
                     Alert.alert('Error', err.response?.data?.detail || 'Upload failed');
                 }
                 // ... rest of error handling ...
+            } finally {
+                setUploading(false)
             }
         }
     };
 
 
-    return { openCamera, uploading, hasPermission };
+    return { openCamera, uploading, hasPermission, vehicle };
 };
