@@ -19,10 +19,11 @@ export default function HomeScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <Button
-        title='Scan Card'
         onPress={openCamera}
         isLoading={uploading}
-      />
+      >
+        <Text style={styles.buttonText}>Scan Card</Text>
+      </Button>
 
       <VehicleCard
         vehicle={vehicle}
@@ -34,20 +35,8 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: '#003366', // Dark tech-style button
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  buttonDisabled: {
-    backgroundColor: '#335577', // Dimmed for loading
-  },
   buttonText: {
-    color: '#fff', // High contrast for readability
+    color: '#fff',
     fontSize: 16,
     fontWeight: '600',
     letterSpacing: 0.5,

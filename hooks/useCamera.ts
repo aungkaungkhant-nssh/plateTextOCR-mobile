@@ -52,7 +52,6 @@ export const useCamera = () => {
                 setUploading(true);
                 const result = await postMultipart("/vehicles", formData);
                 setVehicle(result);
-                // // {"id": 40, "plate_number": "3 For FAME 4 Urocrush Stones Renal Capbules ) 00"}
 
             } catch (err) {
                 // Improved error logging

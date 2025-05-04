@@ -1,23 +1,40 @@
 import React from 'react'
-import { TouchableOpacity, StyleSheet, ActivityIndicator, Text } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, StyleProp } from 'react-native'
+import { TextStyle, ViewStyle, } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
 interface ButtonProps {
-    title: string,
     onPress: () => void,
     isLoading: boolean,
+    containerStyle?: StyleProp<ViewStyle>;
+    children?: React.ReactNode;
 }
-const Button = ({ title, onPress, isLoading }: ButtonProps) => {
+const Button = ({
+    onPress,
+    isLoading,
+    containerStyle,
+    children,
+}: ButtonProps) => {
     return (
         <TouchableOpacity
-            style={[styles.button, isLoading && styles.buttonDisabled]}
+            style={[
+                styles.button,
+                isLoading && styles.buttonDisabled,
+                containerStyle,
+            ]}
             onPress={onPress}
             disabled={isLoading}
         >
-            {isLoading ? (
+            <View style={styles.container}>
+                {children}
+            </View>
+
+            {/* {isLoading ? (
                 <ActivityIndicator size="small" color="#fff" />
+            ) : children ? (
+                children
             ) : (
-                <Text style={styles.buttonText}>{title}</Text>
-            )}
+                title && <Text style={[styles.buttonText, textStyle]}>{title}</Text>
+            )} */}
         </TouchableOpacity>
     )
 }
@@ -28,7 +45,7 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#003366',
         paddingVertical: 12,
-        paddingHorizontal: 24,
+        paddingHorizontal: 8,
         borderRadius: 8,
         alignItems: 'center',
         justifyContent: 'center',
@@ -37,12 +54,11 @@ const styles = StyleSheet.create({
     buttonDisabled: {
         backgroundColor: '#335577',
     },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: '600',
-        letterSpacing: 0.5,
-    },
+    container: {
+        display: "flex",
+        flexDirection: "row",
+        gap: 4
+    }
 
 });
 
