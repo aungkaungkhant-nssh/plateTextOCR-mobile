@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, StyleSheet, View, StyleProp } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, StyleProp, ActivityIndicator } from 'react-native'
 import { TextStyle, ViewStyle, } from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 
 interface ButtonProps {
@@ -25,11 +25,16 @@ const Button = ({
             disabled={isLoading}
         >
             <View style={styles.container}>
+                {
+                    isLoading && (
+                        <ActivityIndicator size="small" color="#fff" />
+                    )
+                }
                 {children}
             </View>
 
             {/* {isLoading ? (
-                <ActivityIndicator size="small" color="#fff" />
+                
             ) : children ? (
                 children
             ) : (

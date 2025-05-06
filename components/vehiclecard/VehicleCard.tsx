@@ -9,9 +9,10 @@ export interface VehicleCardProps {
 };
 const VehicleCard = ({ vehicle }: VehicleCardProps) => {
 
-    // if (!vehicle) {
-    //     return null;
-    // }
+    if (!vehicle) {
+        return null;
+    }
+
     return (
         <View>
             <PunishmentHistoryCard vehicle={vehicle} />

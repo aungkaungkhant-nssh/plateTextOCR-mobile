@@ -2,31 +2,81 @@
 import { View, StyleSheet, Text, TextInput } from 'react-native'
 import Button from '../ui/Button'
 import { useState } from 'react';
+import { punishmentSchema, PunishmentSchemaType } from '@/schema/punishment.schema';
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const PunishmentAmountCard = () => {
     const [isFocus, setIsFocus] = useState(false);
+
+    const queryClient = useQueryClient();
+
+    const { mutate, isPending } = useMutation({
+        mutationFn: async (formData: any) => {
+            // await clientWithAuth.post("/medicine/create", {
+            //     medicine: formData.medicines,
+            // });
+        },
+        onError: (error) => {
+            console.error("Error ", error);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["medications"] });
+            // router.push("/(tabs)/record/medicine");
+        },
+    });
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({
+        resolver: zodResolver(punishmentSchema),
+        defaultValues: {
+            id: 0,
+            punishment_amount: 0,
+            punishment_count: 0
+        },
+    });
+
+    const handlePunishmentAmount = handleSubmit(async (data: PunishmentSchemaType) => {
+        console.log(data)
+    });
+
     return (
         <View style={styles.card}>
             <View>
                 <Text style={styles.title}>ဒဏ်ကြေးအသစ်ထည့်မည်</Text>
                 <View style={{ marginTop: 10, display: "flex", flexDirection: "row", gap: 3 }}>
-                    <TextInput
-                        onFocus={() => setIsFocus(true)}
-                        onBlur={() => setIsFocus(false)}
-                        editable
-                        multiline
-                        numberOfLines={4}
-                        maxLength={40}
-                        value="hello"
-                        keyboardType='numeric'
-                        style={[
-                            styles.input,
-                            { flex: 3 },
-                            isFocus && { borderColor: '#003366' }
-                        ]}
+                    <Controller
+                        control={control}
+                        name='punishment_amount'
+                        render={({ field: { onChange, onBlur, value } }) => (
+                            <TextInput
+                                onFocus={() => setIsFocus(true)}
+                                onBlur={() => setIsFocus(false)}
+                                editable
+                                multiline
+                                numberOfLines={4}
+                                maxLength={40}
+                                onChangeText={(text) => {
+                                    const numericValue = parseInt(text, 10);
+                                    onChange(isNaN(numericValue) ? 0 : numericValue);
+                                }}
+                                value={value?.toString() ?? ''}
+                                keyboardType='numeric'
+                                style={[
+                                    styles.input,
+                                    { flex: 3 },
+                                    isFocus && { borderColor: '#003366' }
+                                ]}
+                            />
+                        )}
                     />
+
                     <Button
-                        onPress={() => console.log("h")}
+                        onPress={handlePunishmentAmount}
                         isLoading={false}
                         containerStyle={{ paddingVertical: 10 }}
                     >
@@ -97,4 +147,5 @@ const styles = StyleSheet.create({
     },
 
 });
+
 

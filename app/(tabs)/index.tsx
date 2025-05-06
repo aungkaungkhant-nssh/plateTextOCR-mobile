@@ -25,9 +25,14 @@ export default function HomeScreen() {
         <Text style={styles.buttonText}>Scan Card</Text>
       </Button>
 
-      <VehicleCard
-        vehicle={vehicle}
-      />
+      {
+        !uploading && (
+          <VehicleCard
+            vehicle={vehicle}
+          />
+        )
+      }
+
 
 
     </SafeAreaView>
